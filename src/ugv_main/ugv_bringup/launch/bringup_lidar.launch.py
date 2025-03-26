@@ -7,6 +7,8 @@ from ament_index_python.packages import get_package_share_directory
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 def generate_launch_description():
+    turtle_namespace = LaunchConfiguration('turtle_namespace', default='robot_namespace_NOT_SET')
+
     # Declare launch arguments
     pub_odom_tf_arg = DeclareLaunchArgument(
         'pub_odom_tf', default_value='true',
@@ -31,7 +33,7 @@ def generate_launch_description():
         launch_arguments={
             'use_rviz': LaunchConfiguration('use_rviz'),
             'rviz_config': LaunchConfiguration('rviz_config'),
-        }.items()
+        }.items(),
     )
 
     # Define the nodes to be launched
@@ -48,21 +50,28 @@ def generate_launch_description():
     # Include laser lidar launch file
     laser_bringup_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('ldlidar'), 'launch', 'ldlidar.launch.py')
-        )
+            os.path.join(get_package_share_directory('ldlidar'), 'launch', 'ldlidar.launch.py')  
+        ),
+        launch_arguments={
+            'robot_namespace': turtle_namespace,
+        }.items(),
     )
 
     # Include laser odometry launch file
     rf2o_laser_odometry_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory('rf2o_laser_odometry'), 'launch', 'rf2o_laser_odometry.launch.py')
-        )
+        ),
+        launch_arguments={
+            'robot_namespace': turtle_namespace,
+        }.items(),
     )
 
     # Define the base node with parameters
     base_node = Node(
         package='ugv_base_node',
         executable='base_node',
+        namespace=[turtle_namespace],
         parameters=[{'pub_odom_tf': LaunchConfiguration('pub_odom_tf')}]
     )
 

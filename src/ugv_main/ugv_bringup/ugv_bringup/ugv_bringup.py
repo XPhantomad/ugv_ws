@@ -41,6 +41,7 @@ class ReadLine:
             if i >= 0:
                 r = self.buf + data[:i+1]
                 self.buf[0:] = data[i+1:]
+                print(r)
                 return r
             else:
                 self.buf.extend(data)
@@ -127,6 +128,9 @@ class ugv_bringup(Node):
         msg.header.frame_id = "base_imu_link"
         imu_raw_data = self.base_controller.base_data
 
+        print(imu_raw_data)
+        print("testsetsetse")
+        print("ersdfsdf")
         # Populate the linear acceleration and angular velocity fields
         msg.linear_acceleration.x = 9.8 * float(imu_raw_data["ax"]) / 8192
         msg.linear_acceleration.y = 9.8 * float(imu_raw_data["ay"]) / 8192
@@ -135,7 +139,7 @@ class ugv_bringup(Node):
         msg.angular_velocity.x = 3.1415926 * float(imu_raw_data["gx"]) / (16.4 * 180)
         msg.angular_velocity.y = 3.1415926 * float(imu_raw_data["gy"]) / (16.4 * 180)
         msg.angular_velocity.z = 3.1415926 * float(imu_raw_data["gz"]) / (16.4 * 180)
-              
+             
         self.imu_data_raw_publisher_.publish(msg)  # Publish the IMU data
         
     # Publish magnetic field data to the ROS topic "imu/mag"

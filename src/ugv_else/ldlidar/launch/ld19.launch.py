@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.substitutions import LaunchConfiguration
 
 '''
 Parameter Description:
@@ -22,17 +23,20 @@ Parameter Description:
 '''
 
 def generate_launch_description():
+
+  turtle_namespace = LaunchConfiguration('turtle_namespace', default='robot_namespace_NOT_SET')
   # LDROBOT LiDAR publisher node
   ldlidar_node = Node(
       package='ldlidar',
       executable='ldlidar_node',
+      namespace=[turtle_namespace],
       name='LD19',
       output='screen',
       parameters=[
         {'product_name': 'LDLiDAR_LD19'},
         {'topic_name': 'scan'},
         {'frame_id': 'base_lidar_link'},
-        {'port_name': '/dev/ttyACM0'},
+        {'port_name': '/dev/ttyUSB0'},
         {'port_baudrate': 230400},
         {'laser_scan_dir': True},
         {'enable_angle_crop_func': True},
