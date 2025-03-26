@@ -40,11 +40,13 @@ def generate_launch_description():
     bringup_node = Node(
         package='ugv_bringup',
         executable='ugv_bringup',
+        namespace=[turtle_namespace],
     )
 
     driver_node = Node(
         package='ugv_bringup',
         executable='ugv_driver',
+        namespace=[turtle_namespace],
     )
 
     # Include laser lidar launch file
