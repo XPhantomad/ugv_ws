@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.substitutions import LaunchConfiguration
 
 '''
 Parameter Description:
@@ -22,10 +23,13 @@ Parameter Description:
 '''
 
 def generate_launch_description():
+
+  turtle_namespace = LaunchConfiguration('turtle_namespace', default='robot_namespace_NOT_SET')
   # LDROBOT LiDAR publisher node
   ldlidar_node = Node(
       package='ldlidar',
       executable='ldlidar_node',
+      namespace=[turtle_namespace],
       name='LD06',
       output='screen',
       parameters=[
